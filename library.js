@@ -1,3 +1,5 @@
+// LIBRARY OBJECT IMPLEMENTATION
+
 const library = {
   tracks: { t01: { id: "t01",
     name: "Code Monkey",
@@ -28,69 +30,72 @@ const library = {
 // FUNCTIONS TO IMPLEMENT:
 /////////////////////////////
 
+console.log("Printing Library...");
+console.log(library); // display initial library object
+
 // prints a list of all playlists, in the form:
 // p01: Coding Music - 2 tracks
 // p02: Other Playlist - 1 tracks
 const printPlaylists = (library) => {
   const playlists = library.playlists; // grab playlist object inside library for easier access
   for (let playlistId in playlists) { // iterate through the playlists of the playlist object
-    const playlist = playlists[playlistId]; // grab specific playlist object 
+    const playlist = playlists[playlistId]; // grab specific playlist object
     const numberOfTracks = playlist.tracks.length; // grab number of tracks
-		// ie. p00: Playlist Name - # track(s if multiple tracks)
-    console.log(`${playlist.id}: ${playlist.name} - ${numberOfTracks}} track${numberOfTracks !== 1 ? 's' : ''}`);
+    // ie. p00: Playlist Name - # track(s if multiple tracks)
+    console.log(`${playlist.id}: ${playlist.name} - ${numberOfTracks} track${numberOfTracks !== 1 ? 's' : ''}`);
   }
 };
 
-console.log("printPlaylists Function")
+console.log("Printing Playlists...");
 printPlaylists(library);
-console.log("--------")
+
 
 // prints a list of all tracks, using the following format:
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
 // t03: Four Thirty-Three by John Cage (Woodstock 1952)
 const printTracks = (library) => {
-	const tracks = library.tracks;
-	for (let trackId in tracks) {
-		const track = tracks[trackId];
-		const trackAlbum = track.album;
-		// ie. t00: Track Name by Artist (Album)
-		console.log(`${track.id}: ${track.name} by ${track.artist} (${track.album})`)
-	}
+  const tracks = library.tracks; // make the tracks subjobject easier to access
+  for (let trackId in tracks) { // iterate through the tracks
+    const track = tracks[trackId]; // make the individual tracks easier to access
+    // ie. t00: Track Name by Artist (Album)
+    console.log(`${track.id}: ${track.name} by ${track.artist} (${track.album})`);
+  }
 };
 
-console.log("printTracks Function")
+console.log("Printing Tracks...");
 printTracks(library);
-console.log("-------")
 
 
 // prints a list of tracks for a given playlist, using the following format:
 // p01: Coding Music - 2 tracks
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
-
 const printPlaylist = (library, playlistId) => {
-	const playlist = library.playlists[playlistId]; // make specific playlist sub-object easier to access
-	const tracks = library.tracks // make track sub-object easier to access
-	// ie. p00: Name of Playlist - # track(add s if multiple tracks)
-	console.log(`${playlist.id}: ${playlist.name} - ${playlist.tracks.length} track${playlist.tracks.length !==1 ? 's' : ''}`) 
-	playlist.tracks.forEach((trackId) => { // for each track value listed in specified playlists tracks key
-		const track = tracks[trackId]; // use given track id to access information from tracks object
-		// ie. t00: Name of Track by Artist (Album)
-		console.log(`${track.id}: ${track.name} by ${track.artist} (${track.album})`)
-	})
+  const playlist = library.playlists[playlistId]; // make specific playlist sub-object easier to access
+  const {tracks} = library; // make track sub-object easier to access (learned this method today in lecture)
+  // ie. p00: Name of Playlist - # track(add s if multiple tracks)
+  console.log(`${playlist.id}: ${playlist.name} - ${playlist.tracks.length} track${playlist.tracks.length !== 1 ? 's' : ''}`);
+  playlist.tracks.forEach((trackId) => { // for each track value listed in specified playlists tracks key
+    const track = tracks[trackId]; // use given track id to access information from tracks object
+    // ie. t00: Name of Track by Artist (Album)
+    console.log(`${track.id}: ${track.name} by ${track.artist} (${track.album})`);
+  });
 };
 
-// TEST CASE
-console.log("printPlaylist Function")
-printPlaylist(library, "p01")
-console.log("--------")
-printPlaylist(library, "p02")
+console.log("Printing Playlist 'p01'...");
+printPlaylist(library, "p01");
 
 
 // adds an existing track to an existing playlist
-const addTrackToPlaylist = function(trackId, playlistId) {
+const addTrackToPlaylist = function(library, trackId, playlistId) {
+  const playlist = library.playlists[playlistId]; // specify this playlist to make it easier to reference
+  playlist.tracks.push(trackId); // add track to tracks object within library
 };
+
+console.log("Adding Track 't03' to Playlist 'p01'");
+addTrackToPlaylist(library, "t03", "p01");
+printPlaylist(library, "p01");
 
 
 // generates a unique id
@@ -101,15 +106,31 @@ const generateUid = function() {
 
 
 // adds a track to the library
-const addTrack = function(name, artist, album) {
-
+const addTrack = function(newName, newArtist, newAlbum) {
+  const Uid = generateUid(); // generate an id for new track
+  library.tracks[Uid] = { // add new track as an object with chosen values
+    id: Uid,
+    name: newName,
+    artist: newArtist,
+    album: newAlbum
+  };
 };
 
+addTrack("Big Iron", "Willy Nelson", "Willy's Big Day");
+console.log(library);
 
 // adds a playlist to the library
-const addPlaylist = function(name) {
-
+const addPlaylist = function(newName) {
+  const Uid = generateUid();
+  library.playlists[Uid] = {
+    id: Uid,
+    name: newName,
+    tracks: []
+  };
 };
+
+addPlaylist("My Brand New Playlist");
+console.log(library);
 
 
 // STRETCH:
@@ -117,6 +138,23 @@ const addPlaylist = function(name) {
 // where the name, artist or album contains the query string (case insensitive)
 // tip: use "string".search("tri")
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
-const printSearchResults = function(query) {
-
+const printSearchResults = (query) => {
+  console.log(`Searching tracks for "${query.toLowerCase()}"...`); // Display what is being searched
+  for (const trackId in library.tracks) { // iterate through the "track" objects of the "tracks" subobject in library
+    const track = library.tracks[trackId]; // make the track object itself easier to access
+    if (
+    // use .toLowerCase() on both the searched object and the query to ensure case insensitivity
+    // NOTE: .toLowerCase() returns either the position where the query is first found OR -1 if the string is not found
+      track.name.toLowerCase().search(query.toLowerCase()) !== -1 || // search names
+      track.artist.toLowerCase().search(query.toLowerCase()) !== -1 || // search artist
+      track.album.toLowerCase().search(query.toLowerCase()) !== -1 // search album
+    ) {
+      console.log(track);
+    }
+  }
 };
+
+printSearchResults("Four");
+printSearchResults("Three");
+
+
