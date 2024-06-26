@@ -46,6 +46,8 @@ const printPlaylists = (library) => {
   }
 };
 
+
+// TEST
 console.log("Printing Playlists...");
 printPlaylists(library);
 
@@ -63,8 +65,12 @@ const printTracks = (library) => {
   }
 };
 
+// TEST
 console.log("Printing Tracks...");
-printTracks(library);
+printTracks(library); // Should display
+// t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
+// t02: Model View Controller by James Dempsey (WWDC 2003)
+// t03: Four Thirty-Three by John Cage (Woodstock 1952)
 
 
 // prints a list of tracks for a given playlist, using the following format:
@@ -83,8 +89,19 @@ const printPlaylist = (library, playlistId) => {
   });
 };
 
+
+// TEST
+console.log("Printing Playlist 'p02'...");
+printPlaylist(library, "p02");
+// should display
+// p02: Other Playlist - 1 track
+// t03: Four Thirty-Three by John Cage (Woodstock 1952)
 console.log("Printing Playlist 'p01'...");
 printPlaylist(library, "p01");
+// should display
+// p01: Coding Music - 2 tracks
+// t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
+// t02: Model View Controller by James Dempsey (WWDC 2003)
 
 
 // adds an existing track to an existing playlist
@@ -93,9 +110,10 @@ const addTrackToPlaylist = function(library, trackId, playlistId) {
   playlist.tracks.push(trackId); // add track to tracks object within library
 };
 
+// TEST
 console.log("Adding Track 't03' to Playlist 'p01'");
 addTrackToPlaylist(library, "t03", "p01");
-printPlaylist(library, "p01");
+printPlaylist(library, "p01"); // playlist should now include t03
 
 
 // generates a unique id
@@ -116,8 +134,11 @@ const addTrack = function(newName, newArtist, newAlbum) {
   };
 };
 
+
+// TEST
+console.log("Adding Track");
 addTrack("Big Iron", "Willy Nelson", "Willy's Big Day");
-console.log(library);
+console.log(library); // should display new track in the tracks object
 
 // adds a playlist to the library
 const addPlaylist = function(newName) {
@@ -129,9 +150,12 @@ const addPlaylist = function(newName) {
   };
 };
 
+// TEST
+console.log("Adding Playlists...");
 addPlaylist("My Brand New Playlist");
-console.log(library);
-
+console.log(library); // should display the "My Brand New Playlist" in the playlists section of the library
+addPlaylist("Another Playlist");
+console.log(library); // should display both "My Brand New Playlist" AND "Another Playlist"
 
 // STRETCH:
 // given a query string string, prints a list of tracks
@@ -154,7 +178,9 @@ const printSearchResults = (query) => {
   }
 };
 
-printSearchResults("Four");
-printSearchResults("Three");
+
+// TEST
+printSearchResults("Four"); // should print out the t03 object
+printSearchResults("Three"); // should print out the t01 and t03 objects
 
 
